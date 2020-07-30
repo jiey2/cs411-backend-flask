@@ -8,7 +8,7 @@ verify_ssl = true
 [packages]
 flask = "*"
 flask-sqlalchemy = "*"
-"mysql.connector" = "*"
+mysql-connector-python = "*"
 simplejson = "*"
 flask-cors = "*"
 flask-api = "*"
