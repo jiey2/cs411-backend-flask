@@ -1,5 +1,5 @@
 import simplejson
-
+ 
 from data import *
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
@@ -29,6 +29,20 @@ def get_arbitrage():
     response = jsonify(response)
 
     return response
+
+@app.route('/item/<str:encodeName>', method=['GET'])
+@cross_origin()
+def get_the_item(encodeName):
+    response = get_item(encodeName)
+    if len(response) == 0:
+        return {"found": False}
+    else:
+        return {
+            "found": True,
+            "data": response
+        }
+
+    
 
 # Run Server
 if __name__ == '__main__':

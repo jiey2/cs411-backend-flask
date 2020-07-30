@@ -1,5 +1,7 @@
 import mysql.connector
 import simplejson as json
+
+from urllib.parse import unquote
 from configs import DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE
 
 def open_db():
@@ -12,11 +14,16 @@ def open_db():
     return mydb
 
 
-def get_item(item_name):
+def get_item(encodeName):
+    item_name = unquote(encodeName)
+    print(item_name)
+
+
     mydb = open_db()
     myDBcursor = mydb.cursor()
     table = 'ItemsList'
-    sql = "SELECT * FROM %s WHERE ItemName = %s" % (table, item_name)
+    sql = """ SELECT * FROM {} WHERE ItemName = "{}" """.format(table, item_name)
+    print(sql)
     myDBcursor.execute(sql)
     item_got = myDBcursor.fetchall()
     myDBcursor.close()
@@ -50,6 +57,4 @@ def get_arb_tab():
         json_data.append(dict(zip(row_headers,result)))
 
     return json_data # List
-
-print(type(get_arb_tab()))
 
