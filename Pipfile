@@ -10,6 +10,8 @@ flask = "*"
 flask-sqlalchemy = "*"
 "mysql.connector" = "*"
 simplejson = "*"
+flask-cors = "*"
+flask-api = "*"
 
 [requires]
 python_version = "3.7"

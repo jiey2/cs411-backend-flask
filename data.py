@@ -40,7 +40,6 @@ def get_arb_tab():
     table = 'ArbTable'
     sql = "SELECT * FROM %s" % (table)
     myDBcursor.execute(sql)
-    
 
     row_headers=[x[0] for x in myDBcursor.description] #this will extract row headers
     arbtab = myDBcursor.fetchall()
@@ -49,7 +48,8 @@ def get_arb_tab():
     json_data=[]
     for result in arbtab:
         json_data.append(dict(zip(row_headers,result)))
-    return json.dumps(json_data)
+
+    return json_data # List
 
 print(type(get_arb_tab()))
 

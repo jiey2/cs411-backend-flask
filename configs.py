@@ -6,6 +6,6 @@ DB_PASSWORD = 'cS411%%996'
 DB_DATABASE = 'CSGO'
 
 ## URL endpoints
-ArbTab_endpoint = '/arbitrage'
+ArbTab_endpoint = '/api/arbitrage'
 
 # get 
