@@ -58,3 +58,26 @@ def get_arb_tab():
 
     return json_data # List
 
+def update_like_num(item_name, input_rate):
+    mydb = open_db()
+    myDBcursor = mydb.cursor()
+    table = 'ItemsList'
+    sql = f"SELECT LikeNumber FROM {table} WHERE ItemName = '{item_name}' "
+    try:
+        myDBcursor.execute(sql)
+        current_rate = myDBcursor.fetchall()
+        new_rate = current_rate[0][0] + input_rate
+        sql = f"UPDATE ItemsList SET LikeNumber= {new_rate} WHERE ItemName= '{item_name}'"
+        myDBcursor.execute(sql)
+    except:
+        print('Error, pretty much no item like this to do things like I have stopped fearing and love the bomb')
+        return False # No a valid item
+
+
+    mydb.commit()
+    myDBcursor.close()
+    mydb.close()
+    return True
+
+
+

@@ -39,9 +39,17 @@ def get_the_item(encodeName):
             "data": response
         }
 
-    
+@app.route('/item/rate', methods=['POST'])
+@cross_origin()
+def change_like():
+    data = request.json
+    status = update_like_num(data['ItemName'],data['Like'])
+    if (status == False):
+        return 'Failed'
+    else:
+        return 'Success'
 
 # Run Server
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
 
