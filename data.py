@@ -79,5 +79,36 @@ def update_like_num(item_name, input_rate):
     mydb.close()
     return True
 
+def fetch_comment(item_name):
+    mydb = open_db()
+    myDBcursor = mydb.cursor()
+    table = 'Comments'
+    try:
+        sql = f""" SELECT * FROM {table} WHERE ItemName="{item_name}" """
+        myDBcursor.execute(sql)
+        toReturn = myDBcursor.fetchall()
+    except:
+        toReturn = None
+    return toReturn
+    
+
+def write_comment(item_name, body, create_time):
+    mydb = open_db()
+    myDBcursor = mydb.cursor()
+    table = 'Comments'
+    sql = f""" INSERT INTO {table} (ItemName, Body, CreatedAt) VALUES ("{item_name}","{body}",{create_time}) """
+    print(sql)
+    wroteStatus = True
+    try:
+        myDBcursor.execute(sql)
+        mydb.commit()
+        myDBcursor.close()
+        mydb.close()
+    except:
+        wroteStatus = False
+    
+    return wroteStatus
+    
+
 
 

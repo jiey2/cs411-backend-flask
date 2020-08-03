@@ -49,6 +49,30 @@ def change_like():
     else:
         return 'Success'
 
+@app.route('/item/comments/postComment', methods=['POST'])
+@cross_origin()
+def post_comment():
+    data = request.json
+    status = write_comment(data['ItemName'],data['Body'],data['CreatedAt'])
+    if (status == False):
+        return 'Failed'
+    else:
+        return 'Success'
+
+
+@app.route('/item/comments/fetchComment', methods=['GET'])
+@cross_origin()
+def get_comment():
+    item_name = request.json['ItemName']
+    response = fetch_comment(item_name)
+    if len(response) == 0:
+        return {"found": False}
+    else:
+        return {
+            "found": True,
+            "data": response
+        }
+
 # Run Server
 if __name__ == '__main__':
     app.run(debug=True)
