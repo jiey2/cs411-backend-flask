@@ -79,12 +79,16 @@ def update_like_num(item_name, input_rate):
     mydb.close()
     return True
 
-def fetch_comment(item_name):
+def fetch_comment(encodeName):
+    item_name = unquote(encodeName)
+
     mydb = open_db()
     myDBcursor = mydb.cursor()
     table = 'Comments'
     try:
-        sql = f""" SELECT * FROM {table} WHERE ItemName="{item_name}" """
+        sql = f""" SELECT CommentId, Body, CreatedAt FROM ItemsList \
+            LEFT JOIN {table} ON ItemsList.ItemName = Comments.ItemName  \
+                WHERE Comments.ItemName="{item_name}" """
         myDBcursor.execute(sql)
         toReturn = myDBcursor.fetchall()
     except:

@@ -31,12 +31,14 @@ def get_arbitrage():
 @cross_origin()
 def get_the_item(encodeName):
     response = get_item(encodeName)
+    comments = fetch_comment(encodeName)
     if len(response) == 0:
         return {"found": False}
     else:
         return {
             "found": True,
-            "data": response
+            "data": response,
+            "comments": comments,
         }
 
 @app.route('/item/rate', methods=['POST'])
@@ -58,20 +60,6 @@ def post_comment():
         return 'Failed'
     else:
         return 'Success'
-
-
-@app.route('/item/comments/fetchComment', methods=['GET'])
-@cross_origin()
-def get_comment():
-    item_name = request.json['ItemName']
-    response = fetch_comment(item_name)
-    if len(response) == 0:
-        return {"found": False}
-    else:
-        return {
-            "found": True,
-            "data": response
-        }
 
 # Run Server
 if __name__ == '__main__':
