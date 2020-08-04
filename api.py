@@ -65,6 +65,19 @@ def post_comment():
     else:
         return 'Success'
 
+
+@app.route('/item/comments/deleteComment', methods=['POST'])
+@cross_origin()
+def delete_comment():
+    data = request.json
+    status = erase_comment(data['commentId'])
+    if (status == False):
+        return 'Failed'
+    else:
+        return 'Success'
+
+
+
 # Run Server
 if __name__ == '__main__':
     app.run(debug=True)

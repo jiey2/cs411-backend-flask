@@ -185,5 +185,23 @@ def fetch_recommendations(encodeName):
     mydb.close()
     return json_data
 
+def erase_comment(commentId):
+    mydb = open_db()
+    myDBcursor = mydb.cursor()
+
+    sql = f""" DELETE FROM Comments WHERE CommentId = {commentId}"""
+    status = True
+    try:
+        myDBcursor.execute(sql)
+        mydb.commit()
+    except:
+        status = False
+    myDBcursor.close()
+    mydb.close()
+
+    return status
+
+
+
 
 
