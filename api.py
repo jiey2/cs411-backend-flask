@@ -32,6 +32,8 @@ def get_arbitrage():
 def get_the_item(encodeName):
     response = get_item(encodeName)
     comments = fetch_comment(encodeName)
+    detailedData = fetch_detailed_data(encodeName)
+    recommendations = fetch_recommendations(encodeName)
     if len(response) == 0:
         return {"found": False}
     else:
@@ -39,6 +41,8 @@ def get_the_item(encodeName):
             "found": True,
             "data": response,
             "comments": comments,
+            "statistics": detailedData,
+            "recommendations": recommendations,
         }
 
 @app.route('/item/rate', methods=['POST'])

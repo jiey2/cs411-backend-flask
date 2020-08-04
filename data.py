@@ -101,18 +101,89 @@ def write_comment(item_name, body, create_time):
     myDBcursor = mydb.cursor()
     table = 'Comments'
     sql = f""" INSERT INTO {table} (ItemName, Body, CreatedAt) VALUES ("{item_name}","{body}",{create_time}) """
-    print(sql)
     wroteStatus = True
     try:
         myDBcursor.execute(sql)
         mydb.commit()
-        myDBcursor.close()
-        mydb.close()
     except:
         wroteStatus = False
+    myDBcursor.close()
+    mydb.close()
     
     return wroteStatus
     
+def fetch_detailed_data(encodeName):
+    item_name = unquote(encodeName)
+
+    mydb = open_db()
+    myDBcursor = mydb.cursor()
+    table = 'PriceSnapshot'
+    sql = f""" SELECT * FROM {table} WHERE ItemName = "{item_name}" """
+    print(sql)
+    try:
+        myDBcursor.execute(sql)
+        row_headers=[x[0] for x in myDBcursor.description]
+        data = myDBcursor.fetchall()
+
+        json_data=[]
+        for result in data:
+            json_data.append(dict(zip(row_headers,result)))
+    except:
+        print("failed")
+        myDBcursor.close()
+        mydb.close()
+        return None
+    
+
+    myDBcursor.close()
+    mydb.close()
+    return json_data
+
+def fetch_recommendations(encodeName):
+    item_name = unquote(encodeName)
+
+    mydb = open_db()
+    myDBcursor = mydb.cursor()
+
+    try:
+        sql = f""" SELECT SteamPrice FROM PriceSnapshot WHERE ItemName = "{item_name}" """
+        myDBcursor.execute(sql)
+        priceBenchmark = myDBcursor.fetchall()
+        priceBenchmark = float(priceBenchmark[0][0])
+
+        sql = f""" SELECT Category FROM ItemsList WHERE ItemName = "{item_name}" """
+        myDBcursor.execute(sql)
+        currCatgory = myDBcursor.fetchall()
+        currCatgory = str(currCatgory[0][0])
+
+        if (currCatgory == None):
+            currCatgory = "Mil-Spec Grade Pistol"
+        
+        if (priceBenchmark == None):
+            priceBenchmark = 1000
+
+        sql = f"""SELECT ItemsList.ItemName, ItemsList.IconURL, PriceSnapshot.SteamPrice FROM ItemsList \
+            LEFT JOIN PriceSnapshot ON ItemsList.ItemName = PriceSnapshot.ItemName\
+                WHERE ItemsList.Category = "{currCatgory}" \
+                    AND PriceSnapshot.SteamPrice > {priceBenchmark}\
+                        ORDER BY PriceSnapshot.SteamPrice LIMIT 5 """
+
+        myDBcursor.execute(sql)
+        row_headers=[x[0] for x in myDBcursor.description]
+        data = myDBcursor.fetchall()
+
+        json_data=[]
+        for result in data:
+            json_data.append(dict(zip(row_headers,result)))
+    except:
+        print("failed")
+        myDBcursor.close()
+        mydb.close()
+        return None
+
+    myDBcursor.close()
+    mydb.close()
+    return json_data
 
 
 
